@@ -75,7 +75,7 @@ class TinderBot():
         vaccinated_like_btn.click()
 
     def dislike(self):
-        dislike = r'//*[@id="u2005023502"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[5]/div/div[2]/button'
+        dislike = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[2]/button'
         dislike_btn = self.driver.find_element_by_xpath(dislike)
         dislike_btn.click()
 
@@ -87,16 +87,17 @@ class TinderBot():
         print(name_get)
         attribute_list= self.driver.find_element_by_xpath(description).text.split(" ")
         print(attribute_list)
+        test= any(x in attribute_list for x in cck_blockers)
+        if test is True:
+            self.dislike()
+        else:
+            self.subs_like()
 
     def auto_swipe(self):
         while True:
             try:
                 sleep(uniform(2, 3))
                 self.selector()
-                if any(x in cck_blockers for x in attribute_list):
-                    self.dislike()
-                else:
-                    self.subs_like()
             except Exception:
                 try:
                     sleep(2.12)
