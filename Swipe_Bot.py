@@ -79,6 +79,19 @@ class TinderBot():
         dislike_btn = self.driver.find_element_by_xpath(dislike)
         dislike_btn.click()
 
+
+    def close_popup(self):
+        popup_3= r'//*[@id="u276642426"]/div/div/div[3]/button'
+        popup_3 = self.driver.find_element_by_xpath(popup_3)
+        popup_3.click()
+
+
+    def close_match(self):
+        close_match= r'//*[@id="u-1959572593"]/div/div/div[1]/div/div[4]/button'
+        match_popup = self.driver.find_element_by_xpath(close_match)
+        match_popup.click()
+
+
     def selector (self):
         sleep(3)
         Name = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
@@ -110,17 +123,14 @@ class TinderBot():
                             sleep(0.5)
                             self.close_match()
                         except Exception:
-                            self.vaccinated_like()
+                            try:
+                                self.vaccinated_like()
+                            except Exception:
+                                    self.subs_like()
 
-    def close_popup(self):
-        popup_3= r'//*[@id="u276642426"]/div/div/div[3]/button'
-        popup_3 = self.driver.find_element_by_xpath(popup_3)
-        popup_3.click()
 
-    def close_match(self):
-        close_match= r'//*[@id="u-1959572593"]/div/div/div[1]/div/div[4]/button'
-        match_popup = self.driver.find_element_by_xpath(close_match)
-        match_popup.click()
+
+
 
 
 run = TinderBot()
