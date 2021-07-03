@@ -43,7 +43,7 @@ class TinderBot():
         pw_in.send_keys(Keys.ENTER)
         self.driver.switch_to_window(base_window)
 
-        sleep(5)
+        sleep(7)
 
         popup_1 = self.driver.find_element_by_xpath('//*[@id="u276642426"]/div/div/div/div/div[3]/button[1]/span')
         popup_1.click()
@@ -68,13 +68,19 @@ class TinderBot():
         subs_like_btn = self.driver.find_element_by_xpath(subs_like)
         subs_like_btn.click()
 
+    def vaccinated_like(self):
+        #this function to deal with exceptions thrown by profiles with "Vaccinated" badge
+        vaccinated_like = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[4]/button'
+        vaccinated_like_btn= self.driver.find_element_by_xpath(vaccinated_like)
+        vaccinated_like_btn.click()
+
     def dislike(self):
         dislike = r'//*[@id="u2005023502"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[5]/div/div[2]/button'
         dislike_btn = self.driver.find_element_by_xpath(dislike)
         dislike_btn.click()
 
-
-    def get_details (self):
+    def selector (self):
+        sleep(3)
         Name = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
         description= r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
         name_get=self.driver.find_element_by_xpath(Name).text
@@ -84,22 +90,26 @@ class TinderBot():
 
     def auto_swipe(self):
         while True:
-            sleep(uniform(2, 3))
-            self.get_details()
-            if any(x in cck_blockers for x in attribute_list):
-                self.dislike()
-            else:
+            try:
+                sleep(uniform(2, 3))
+                self.selector()
+                if any(x in cck_blockers for x in attribute_list):
+                    self.dislike()
+                else:
+                    self.subs_like()
+            except Exception:
                 try:
+                    sleep(2.12)
                     self.like()
                 except Exception:
                     try:
-                        self.subs_like()
+                        self.close_popup()
                     except Exception:
                         try:
-                            self.close_popup()
+                            sleep(0.5)
+                            self.close_match()
                         except Exception:
-                                sleep(0.5)
-                                self.close_match()
+                            self.vaccinated_like()
 
     def close_popup(self):
         popup_3= r'//*[@id="u276642426"]/div/div/div[3]/button'
