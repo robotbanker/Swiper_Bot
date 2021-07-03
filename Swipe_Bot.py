@@ -130,9 +130,13 @@ class TinderBot():
         n = int(0)
         while True:
             n = n+1
-            df = pd.DataFrame.from_dict (bot_results, orient='index')
-            print(df.transpose())
-            #print(n)
+            k= 100
+            data = pd.DataFrame.from_dict (bot_results, orient='index')
+            df = data.transpose()
+            if n % k == 0:
+                df.to_csv(r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv')
+                #self.file_save()
+
             try:
                 self.selector()
             except Exception:
@@ -151,8 +155,6 @@ class TinderBot():
                                 self.vaccinated_like()
                             except Exception:
                                     self.subs_like()
-
-    def file_save (self):
 
 
 
