@@ -1,16 +1,10 @@
 import pandas as pd
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-import collections
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 from random import uniform
 from secrets import username, password
 import json
-from pandas import DataFrame as df
 
 cck_blockers = json.loads(open('CckBlocker.json').read())
 attribute_list = []
@@ -125,12 +119,15 @@ class TinderBot():
         bot_results['Name'].append(name_get)
         bot_results['Descriprion'].append(text_descr + '_')
         bot_results['Vote'].append(verdict)
+        print(name_get)
+        print(verdict)
 
     def auto_swipe(self):
         n = int(0)
         while True:
             n = n+1
             k= 100
+            print (n)
             data = pd.DataFrame.from_dict (bot_results, orient='index')
             df = data.transpose()
             if n % k == 0:
