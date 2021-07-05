@@ -88,6 +88,12 @@ class TinderBot():
         vaccinated_like_btn= self.driver.find_element_by_xpath(vaccinated_like)
         vaccinated_like_btn.click()
 
+    def info_button_like(self):
+        # this function to deal with exceptions thrown by profiles with "info button"
+        info_like = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[6]/div/div[4]/button'
+        info_like_btn= self.driver.find_element_by_xpath(info_like)
+        info_like_btn.click()
+
 
     def dislike(self):
         dislike = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[2]/button'
@@ -127,18 +133,19 @@ class TinderBot():
             verdict = 'swipe right'
 
         bot_results['Name'].append(name_get)
-        bot_results['Descriprion'].append(text_descr + '_')
+        bot_results['Descriprion'].append(text_descr + ' ')
         bot_results['Vote'].append(verdict)
         bot_results['Triggers'].append(trigger)
         print(name_get)
         print(verdict)
         print(trigger)
+        print (text_descr)
 
     def auto_swipe(self):
         n = int(0)
         while True:
             n = n+1
-            k= 100
+            k= 10
             print (n)
             data = pd.DataFrame.from_dict (bot_results, orient='index')
             df = data.transpose()
@@ -163,7 +170,10 @@ class TinderBot():
                             try:
                                 self.vaccinated_like()
                             except Exception:
-                                    self.subs_like()
+                                try:
+                                    self.info_button_like()
+                                except Exception:
+                                        self.subs_like()
 
 
     def close (self):
@@ -179,6 +189,7 @@ try:
 except Exception:
     run.close()
     os.rename (r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv',fr'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results_as-of-{date_time}.csv')
-    sleep(600)
-    run.login()
-    run.auto_swipe()
+    sleep(20)
+    run2= TinderBot()
+    run2.login()
+    run2.auto_swipe()
