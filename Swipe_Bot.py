@@ -1,18 +1,28 @@
+import os
+
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 from random import uniform
 from secrets import username, password
+from os import rename
+from datetime import datetime
 import json
+
+
 
 cck_blockers = json.loads(open('CckBlocker.json').read())
 attribute_list = []
 bot_results = {
                'Name': [],
                'Vote':[],
+               'Triggers': [],
                'Descriprion':[],
                }
+
+now = datetime.now()
+date_time = now.strftime("%m-%d-%Y_%H%M%S")
 
 class TinderBot():
     driver = webdriver.Chrome()
@@ -107,7 +117,7 @@ class TinderBot():
         attribute_list= self.driver.find_element_by_xpath(description).text.split(" ")
 
         test= any(x in attribute_list for x in cck_blockers)
-        #trigger = set.intersection(set(attribute_list), set(cck_blockers))
+        trigger = set.intersection(set(attribute_list), set(cck_blockers))
 
         if test is True:
             self.dislike()
@@ -119,8 +129,10 @@ class TinderBot():
         bot_results['Name'].append(name_get)
         bot_results['Descriprion'].append(text_descr + '_')
         bot_results['Vote'].append(verdict)
+        bot_results['Triggers'].append(trigger)
         print(name_get)
         print(verdict)
+        print(trigger)
 
     def auto_swipe(self):
         n = int(0)
@@ -154,8 +166,19 @@ class TinderBot():
                                     self.subs_like()
 
 
+    def close (self):
+        self.driver.quit()
+
 
 
 run = TinderBot()
+
 run.login()
-run.auto_swipe()
+try:
+    run.auto_swipe()
+except Exception:
+    run.close()
+    os.rename (r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv',fr'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results_as-of-{date_time}.csv')
+    sleep(600)
+    run.login()
+    run.auto_swipe()
