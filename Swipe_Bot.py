@@ -34,12 +34,12 @@ class TinderBot():
 
         sleep(2)
 
-        login_btn = self.driver.find_element_by_xpath('// *[ @ id = "u2005023502"] / div / div[1] / div / main / div[1] / div / div / div / div / header / div / div[2] / div[2] / a / span')
+        login_btn = self.driver.find_element_by_xpath('//*[@id="q633216204"]/div/div[1]/div/main/div[1]/div/div/div/div/header/div/div[2]/div[2]/a')
         login_btn.click()
 
         sleep(1)
 
-        fb_btn = self.driver.find_element_by_xpath('//*[@id="u276642426"]/div/div/div[1]/div/div[3]/span/div[2]/button/span[2]')
+        fb_btn = self.driver.find_element_by_xpath('//*[@id="q-1095164872"]/div/div/div[1]/div/div[3]/span/div[2]/button')
         fb_btn.click()
 
         # switch to login popup
@@ -57,23 +57,37 @@ class TinderBot():
 
         sleep(7)
 
-        popup_1 = self.driver.find_element_by_xpath('//*[@id="u276642426"]/div/div/div/div/div[3]/button[1]/span')
+        popup_1 = self.driver.find_element_by_xpath('//*[@id="q-1095164872"]/div/div/div/div/div[3]/button[1]')
         popup_1.click()
 
         sleep(2)
 
-        popup_2 = self.driver.find_element_by_xpath('//*[@id="u276642426"]/div/div/div/div/div[3]/button[2]/span')
+        popup_2 = self.driver.find_element_by_xpath('//*[@id="q-1095164872"]/div/div/div/div/div[3]/button[2]')
         popup_2.click()
 
-        cookies = self.driver.find_element_by_xpath('//*[@id="u2005023502"]/div/div[2]/div/div/div[1]/button')
+        cookies = self.driver.find_element_by_xpath('//*[@id="q633216204"]/div/div[2]/div/div/div[1]/button')
         cookies.click()
 
         sleep(4)
 
     def like(self):
-        like = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[4]/div/div[4]'
+        like = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[4]/div/div[4]/button'
         swipe_right = self.driver.find_element_by_xpath(like)
         swipe_right.click()
+        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]'
+        description = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
+        name_get = self.driver.find_element_by_xpath(Name).text
+        text_descr = self.driver.find_element_by_xpath(description).text
+        attribute_list = self.driver.find_element_by_xpath(description).text.split(" ")
+        trigger = set.intersection(set(attribute_list), set(cck_blockers))
+        bot_results['Name'].append(name_get)
+        bot_results['Descriprion'].append(text_descr + ' ')
+        bot_results['Vote'].append(verdict)
+        bot_results['Triggers'].append(trigger)
+        print(name_get)
+        print(verdict)
+        print(trigger)
+        print(text_descr)
 
 
     def subs_like (self):
@@ -87,12 +101,43 @@ class TinderBot():
         vaccinated_like = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[4]/button'
         vaccinated_like_btn= self.driver.find_element_by_xpath(vaccinated_like)
         vaccinated_like_btn.click()
+        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
+        description = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
+        name_get = self.driver.find_element_by_xpath(Name).text
+        text_descr = self.driver.find_element_by_xpath(description).text
+        attribute_list = self.driver.find_element_by_xpath(description).text.split(" ")
+        trigger = set.intersection(set(attribute_list), set(cck_blockers))
+        bot_results['Name'].append(name_get)
+        bot_results['Descriprion'].append(text_descr + ' ')
+        bot_results['Vote'].append(verdict)
+        bot_results['Triggers'].append(trigger)
+        print(name_get)
+        print(verdict)
+        print(trigger)
+        print(text_descr)
+
 
     def info_button_like(self):
         # this function to deal with exceptions thrown by profiles with "info button"
         info_like = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[6]/div/div[4]/button'
         info_like_btn= self.driver.find_element_by_xpath(info_like)
         info_like_btn.click()
+
+        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
+        description = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
+        name_get = self.driver.find_element_by_xpath(Name).text
+        text_descr = self.driver.find_element_by_xpath(description).text
+        attribute_list = self.driver.find_element_by_xpath(description).text.split(" ")
+        trigger = set.intersection(set(attribute_list), set(cck_blockers))
+        bot_results['Name'].append(name_get)
+        bot_results['Descriprion'].append(text_descr + ' ')
+        bot_results['Vote'].append(verdict)
+        bot_results['Triggers'].append(trigger)
+        print(name_get)
+        print(verdict)
+        print(trigger)
+        print(text_descr)
+
 
 
     def dislike(self):
@@ -112,10 +157,15 @@ class TinderBot():
         match_popup = self.driver.find_element_by_xpath(close_match)
         match_popup.click()
 
+    def close_boost_banner (self):
+        banner= r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[6]/div/div[4]/button'
+        banner_popup = self.driver.find_element_by_xpath(banner)
+        banner_popup.click()
+
 
     def selector (self):
         sleep(uniform(1,2))
-        Name = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
+        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
         description= r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
         name_get=self.driver.find_element_by_xpath(Name).text
         text_descr= self.driver.find_element_by_xpath(description).text
@@ -164,16 +214,19 @@ class TinderBot():
                         self.close_popup()
                     except Exception:
                         try:
-                            sleep(0.5)
-                            self.close_match()
+                            self.close_boost_banner()
                         except Exception:
                             try:
-                                self.vaccinated_like()
+                                sleep(0.5)
+                                self.close_match()
                             except Exception:
                                 try:
-                                    self.info_button_like()
+                                    self.vaccinated_like()
                                 except Exception:
-                                        self.subs_like()
+                                    try:
+                                        self.info_button_like()
+                                    except Exception:
+                                            self.subs_like()
 
 
     def close (self):
@@ -187,7 +240,7 @@ run.login()
 try:
     run.auto_swipe()
 except Exception:
-    run.close()
+
     os.rename (r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv',fr'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results_as-of-{date_time}.csv')
     sleep(20)
     run2= TinderBot()
