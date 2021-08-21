@@ -1,5 +1,4 @@
 import os
-
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -9,7 +8,6 @@ from secrets import username, password
 from os import rename
 from datetime import datetime
 import json
-
 
 
 cck_blockers = json.loads(open('CckBlocker.json').read())
@@ -31,157 +29,75 @@ class TinderBot():
 
     def login(self):
         self.driver.get('https://tinder.com')
-
         sleep(2)
-
-        login_btn = self.driver.find_element_by_xpath('//*[@id="q633216204"]/div/div[1]/div/main/div[1]/div/div/div/div/header/div/div[2]/div[2]/a')
-        login_btn.click()
-
+        login_btn = self.driver.find_elements_by_xpath("//*[contains(text(),'Log in')]")
+        login_btn[0].click()
         sleep(1)
-
-        fb_btn = self.driver.find_element_by_xpath('//*[@id="q-1095164872"]/div/div/div[1]/div/div[3]/span/div[2]/button')
+        fb_btn = self.driver.find_element_by_xpath("//*[contains(text(),'Login with Facebook')]")
         fb_btn.click()
 
         # switch to login popup
         base_window = self.driver.window_handles[0]
         self.driver.switch_to_window(self.driver.window_handles[1])
-
+        #input email
         email_in = self.driver.find_element_by_xpath('//*[@id="email"]')
         email_in.send_keys(username)
-
+        #input password
         pw_in = self.driver.find_element_by_xpath('//*[@id="pass"]')
         pw_in.send_keys(password)
-
         pw_in.send_keys(Keys.ENTER)
         self.driver.switch_to_window(base_window)
-
-        sleep(7)
-
-        popup_1 = self.driver.find_element_by_xpath('//*[@id="q-1095164872"]/div/div/div/div/div[3]/button[1]')
-        popup_1.click()
-
+        sleep(6)
+        #close/accept popup:
+        popup_1 = self.driver.find_elements_by_xpath("//*[contains(text(),'Allow')]")
+        popup_1[0].click()
         sleep(2)
-
-        popup_2 = self.driver.find_element_by_xpath('//*[@id="q-1095164872"]/div/div/div/div/div[3]/button[2]')
-        popup_2.click()
-
-        cookies = self.driver.find_element_by_xpath('//*[@id="q633216204"]/div/div[2]/div/div/div[1]/button')
-        cookies.click()
-
+        popup_2 = self.driver.find_elements_by_xpath("//*[contains(text(),'Not interested')]")
+        popup_2[0].click()
+        cookies = self.driver.find_elements_by_xpath("//*[contains(text(),'I accept')]")
+        cookies[0].click()
         sleep(4)
 
+
     def like(self):
-        like = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[4]/div/div[4]/button'
+        like = "//*[@class='Mx(a) Fxs(0) Sq(70px) Sq(60px)--s Bd Bdrs(50%) Bdc($c-like-green)']"
         swipe_right = self.driver.find_element_by_xpath(like)
         swipe_right.click()
-        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]'
-        description = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
-        name_get = self.driver.find_element_by_xpath(Name).text
-        text_descr = self.driver.find_element_by_xpath(description).text
-        attribute_list = self.driver.find_element_by_xpath(description).text.split(" ")
-        trigger = set.intersection(set(attribute_list), set(cck_blockers))
-        bot_results['Name'].append(name_get)
-        bot_results['Descriprion'].append(text_descr + ' ')
-        bot_results['Vote'].append(verdict)
-        bot_results['Triggers'].append(trigger)
-        print(name_get)
-        print(verdict)
-        print(trigger)
-        print(text_descr)
-
-
-    def subs_like (self):
-        subs_like=r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[4]'
-        subs_like_btn = self.driver.find_element_by_xpath(subs_like)
-        subs_like_btn.click()
-
-
-    def vaccinated_like(self):
-        #this function to deal with exceptions thrown by profiles with "Vaccinated" badge
-        vaccinated_like = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[4]/button'
-        vaccinated_like_btn= self.driver.find_element_by_xpath(vaccinated_like)
-        vaccinated_like_btn.click()
-        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
-        description = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
-        name_get = self.driver.find_element_by_xpath(Name).text
-        text_descr = self.driver.find_element_by_xpath(description).text
-        attribute_list = self.driver.find_element_by_xpath(description).text.split(" ")
-        trigger = set.intersection(set(attribute_list), set(cck_blockers))
-        bot_results['Name'].append(name_get)
-        bot_results['Descriprion'].append(text_descr + ' ')
-        bot_results['Vote'].append(verdict)
-        bot_results['Triggers'].append(trigger)
-        print(name_get)
-        print(verdict)
-        print(trigger)
-        print(text_descr)
-
-
-    def info_button_like(self):
-        # this function to deal with exceptions thrown by profiles with "info button"
-        info_like = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[6]/div/div[4]/button'
-        info_like_btn= self.driver.find_element_by_xpath(info_like)
-        info_like_btn.click()
-
-        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
-        description = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
-        name_get = self.driver.find_element_by_xpath(Name).text
-        text_descr = self.driver.find_element_by_xpath(description).text
-        attribute_list = self.driver.find_element_by_xpath(description).text.split(" ")
-        trigger = set.intersection(set(attribute_list), set(cck_blockers))
-        bot_results['Name'].append(name_get)
-        bot_results['Descriprion'].append(text_descr + ' ')
-        bot_results['Vote'].append(verdict)
-        bot_results['Triggers'].append(trigger)
-        print(name_get)
-        print(verdict)
-        print(trigger)
-        print(text_descr)
-
 
 
     def dislike(self):
-        dislike = r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[5]/div/div[2]/button'
+        dislike = "//*[@class='Mx(a) Fxs(0) Sq(70px) Sq(60px)--s Bd Bdrs(50%) Bdc($c-pink)']"
         dislike_btn = self.driver.find_element_by_xpath(dislike)
         dislike_btn.click()
 
 
     def close_popup(self):
-        popup_3= r'//*[@id="u276642426"]/div/div/div[3]/button'
+        popup_3= "//*[contains(text(),'Not interested')]"
         popup_3 = self.driver.find_element_by_xpath(popup_3)
         popup_3.click()
 
 
     def close_match(self):
-        close_match= r'//*[@id="u-1959572593"]/div/div/div[1]/div/div[4]/button'
+        close_match= '//*[@aria-label="Close"]'
         match_popup = self.driver.find_element_by_xpath(close_match)
         match_popup.click()
-
-    def close_boost_banner (self):
-        banner= r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[6]/div/div[4]/button'
-        banner_popup = self.driver.find_element_by_xpath(banner)
-        banner_popup.click()
 
 
     def selector (self):
         sleep(uniform(1,2))
-        Name = r'//*[@id="q633216204"]/div/div[1]/div/div/main/div/div[1]/div[1]/div/div[3]/div[3]/div/div[1]/div/div/span'
-        description= r'//*[@id="u2005023502"]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div'
+        Name = "//*[@itemprop='name']"
+        description = "//*[@class='BreakWord Whs(pl) Fz($ms) Ta(start) Animn($anim-slide-in-left) Animdur($fast) LineClamp(5,118.125px)']"
         name_get=self.driver.find_element_by_xpath(Name).text
         text_descr= self.driver.find_element_by_xpath(description).text
-
         attribute_list= self.driver.find_element_by_xpath(description).text.split(" ")
-
         test= any(x in attribute_list for x in cck_blockers)
         trigger = set.intersection(set(attribute_list), set(cck_blockers))
-
         if test is True:
             self.dislike()
             verdict = 'swipe left'
         else:
-            self.subs_like()
+            self.like()
             verdict = 'swipe right'
-
         bot_results['Name'].append(name_get)
         bot_results['Descriprion'].append(text_descr + ' ')
         bot_results['Vote'].append(verdict)
@@ -190,6 +106,7 @@ class TinderBot():
         print(verdict)
         print(trigger)
         print (text_descr)
+
 
     def auto_swipe(self):
         n = int(0)
@@ -202,7 +119,6 @@ class TinderBot():
             if n % k == 0:
                 df.to_csv(r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv')
                 #self.file_save()
-
             try:
                 self.selector()
             except Exception:
@@ -213,20 +129,8 @@ class TinderBot():
                     try:
                         self.close_popup()
                     except Exception:
-                        try:
-                            self.close_boost_banner()
-                        except Exception:
-                            try:
-                                sleep(0.5)
-                                self.close_match()
-                            except Exception:
-                                try:
-                                    self.vaccinated_like()
-                                except Exception:
-                                    try:
-                                        self.info_button_like()
-                                    except Exception:
-                                            self.subs_like()
+                        sleep(0.5)
+                        self.close_match()
 
 
     def close (self):
