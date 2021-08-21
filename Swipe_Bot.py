@@ -22,7 +22,7 @@ now = datetime.now()
 date_time = now.strftime("%m-%d-%Y_%H%M%S")
 
 
-class TinderBot():
+class TinderBot:
     driver = webdriver.Chrome()
 
     def __init__(self):
