@@ -10,6 +10,6 @@ create a secrets.py file with variables:
 
 
 
-please add more features to this, would be awesome to see what you can come up w
+please add more features to this, would be awesome to see what you can come up with
 
 cheers
