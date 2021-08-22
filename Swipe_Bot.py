@@ -103,6 +103,10 @@ class TinderBot:
         print(trigger)
         print(text_descr)
 
+    def run_saver (self):
+
+
+
     def auto_swipe(self):
         n = int(0)
         while True:
@@ -124,8 +128,11 @@ class TinderBot:
                     try:
                         self.close_popup()
                     except Exception:
-                        sleep(0.5)
-                        self.close_match()
+                        try:
+                            sleep(0.5)
+                            self.close_match()
+                        except Exception:
+
 
     def close(self):
         self.driver.quit()
@@ -138,7 +145,3 @@ try:
 except Exception:
     os.rename(r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv',
               fr'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results_as-of-{date_time}.csv')
-    sleep(20)
-    run2 = TinderBot()
-    run2.login()
-    run2.auto_swipe()
