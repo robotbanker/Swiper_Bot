@@ -1,16 +1,19 @@
-import os
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 from random import uniform
 from secrets import username, password
-from os import rename
 from datetime import datetime
+import os
 import json
+
+cwd = os.getcwd()  # this variable is called in the result_saver function. To save the excel file in the current working
+# directory of the script.
 
 cck_blockers = json.loads(open('CckBlocker.json').read())
 attribute_list = []
+#TODO: map into this dict additional info as age and distance
 bot_results = {
     'Name': [],
     'Vote': [],
@@ -28,7 +31,7 @@ class TinderBot:
     def __init__(self):
         self.driver = webdriver.Chrome()
 
-    def login(self):
+    def login(self,_username,_password):
         self.driver.get('https://tinder.com')
         sleep(2)
         login_btn = self.driver.find_elements_by_xpath("//*[contains(text(),'Log in')]")
@@ -42,10 +45,10 @@ class TinderBot:
         self.driver.switch_to.window(self.driver.window_handles[1])
         # input email
         email_in = self.driver.find_element_by_xpath('//*[@id="email"]')
-        email_in.send_keys(username)
+        email_in.send_keys(_username)
         # input password
         pw_in = self.driver.find_element_by_xpath('//*[@id="pass"]')
-        pw_in.send_keys(password)
+        pw_in.send_keys(_password)
         pw_in.send_keys(Keys.ENTER)
         self.driver.switch_to.window(base_window)
         sleep(6)
@@ -103,45 +106,39 @@ class TinderBot:
         print(trigger)
         print(text_descr)
 
-    def run_saver (self):
-
-
-
-    def auto_swipe(self):
-        n = int(0)
-        while True:
-            k = 10
-            data = pd.DataFrame.from_dict(bot_results, orient='index')
-            df = data.transpose()
-            if n % k == 0:
-                df.to_csv(r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv')
-                # self.file_save()
-            try:
-                self.selector()
-                n = n+1
-                print(n)
-            except Exception:
-                try:
-                    sleep(2.12)
-                    self.like()
-                except Exception:
-                    try:
-                        self.close_popup()
-                    except Exception:
-                        try:
-                            sleep(0.5)
-                            self.close_match()
-                        except Exception:
-
+    def result_saver(self):
+        '''this function save in the result of the current bot run
+         in the path where the program has been executed from.'''
+        data = pd.DataFrame.from_dict(bot_results, orient='index')
+        df = data.transpose()
+        df.to_csv(fr'{cwd}\sink\Bot_Results_as-of-{date_time}.csv')
 
     def close(self):
         self.driver.quit()
 
+    def auto_swipe(self):
+        n = int(0)
+        try:
+            self.selector()
+            n = n + 1
+            print(n)
+        except Exception:
+            try:
+                sleep(2.12)
+                self.like()
+            except Exception:
+                try:
+                    self.close_popup()
+                except Exception:
+                    try:
+                        sleep(0.5)
+                        self.close_match()
+                    except Exception:
+                        sleep(0.5)
+                        self.result_saver()
+                        self.close()
 
-run = TinderBot()
-run.login()
-try:
-    run.auto_swipe()
-except Exception:
-    os.rename(r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv',
-              fr'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results_as-of-{date_time}.csv')
+
+#run = TinderBot()
+#run.login(_password=password,_username=username)
+#run.auto_swipe()
