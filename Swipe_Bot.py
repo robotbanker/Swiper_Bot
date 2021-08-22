@@ -81,9 +81,9 @@ class TinderBot:
 
     def selector(self):
         sleep(uniform(1, 2))
-        Name = "//*[@itemprop='name']"
+        name = "//*[@itemprop='name']"
         description = "//*[@class='BreakWord Whs(pl) Fz($ms) Ta(start) Animn($anim-slide-in-left) Animdur($fast) LineClamp(5,118.125px)']"
-        name_get = self.driver.find_element_by_xpath(Name).text
+        name_get = self.driver.find_element_by_xpath(name).text
         text_descr = self.driver.find_element_by_xpath(description).text
         attribute_list = self.driver.find_element_by_xpath(description).text.split(" ")
         test = any(x in attribute_list for x in cck_blockers)
@@ -106,9 +106,7 @@ class TinderBot:
     def auto_swipe(self):
         n = int(0)
         while True:
-            n = n + 1
             k = 10
-            print(n)
             data = pd.DataFrame.from_dict(bot_results, orient='index')
             df = data.transpose()
             if n % k == 0:
@@ -116,6 +114,8 @@ class TinderBot:
                 # self.file_save()
             try:
                 self.selector()
+                n = n+1
+                print(n)
             except Exception:
                 try:
                     sleep(2.12)
@@ -132,12 +132,10 @@ class TinderBot:
 
 
 run = TinderBot()
-
 run.login()
 try:
     run.auto_swipe()
 except Exception:
-
     os.rename(r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results.csv',
               fr'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Bot_Results_as-of-{date_time}.csv')
     sleep(20)
