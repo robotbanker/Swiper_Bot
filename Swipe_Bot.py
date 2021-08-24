@@ -1,12 +1,12 @@
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 from random import uniform
 from secrets import username, password
 from datetime import datetime
-import os
 import json
+import os
+import pandas as pd
 
 cwd = os.getcwd()  # this variable is called in the result_saver function. To save the excel file in the current working
 # directory of the script.
@@ -26,10 +26,26 @@ date_time = now.strftime("%m-%d-%Y_%H%M%S")
 
 
 class TinderBot:
-    driver = webdriver.Chrome()
+    def __init__(self,performance):
+        if performance == False:
+            self.driver = webdriver.Chrome()
+        else:
+            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            self.options = webdriver.ChromeOptions()
+            self.options.headless = False #TODO: to fix why this doesn't work when set to True
+            self.options.add_argument(f'user-agent={user_agent}')
+            self.options.add_argument("--window-size=1920,1080")
+            self.options.add_argument('--ignore-certificate-errors')
+            self.options.add_argument('--allow-running-insecure-content')
+            self.options.add_argument("--disable-extensions")
+            self.options.add_argument("--proxy-server='direct://'")
+            self.options.add_argument("--proxy-bypass-list=*")
+            self.options.add_argument("--start-maximized")
+            self.options.add_argument('--disable-gpu')
+            self.options.add_argument('--disable-dev-shm-usage')
+            self.options.add_argument('--no-sandbox')
+            self.driver = webdriver.Chrome( options=self.options)
 
-    def __init__(self):
-        self.driver = webdriver.Chrome()
 
     def login(self,_username,_password):
         self.driver.get('https://tinder.com')
@@ -112,33 +128,48 @@ class TinderBot:
         data = pd.DataFrame.from_dict(bot_results, orient='index')
         df = data.transpose()
         df.to_csv(fr'{cwd}\sink\Bot_Results_as-of-{date_time}.csv')
+        #merge all excel file in a single one
+
+    def consolidate_result (self):
+        path = fr"{cwd}\sink\\"
+        files = os.listdir(path)
+        file_csv = [f for f in files if f[-3:] =='csv']
+        master_file = pd.DataFrame()
+        for f in file_csv:
+            data = pd.read_csv (path + f, index_col= None, header=0)
+            master_file = master_file.append(data)
+            master_file.to_csv(fr'{cwd}\sink\MasterFile\MasterFile.csv')
+
 
     def close(self):
         self.driver.quit()
 
     def auto_swipe(self):
         n = int(0)
-        try:
-            self.selector()
-            n = n + 1
-            print(n)
-        except Exception:
+        while True:
             try:
-                sleep(2.12)
-                self.like()
+                self.selector()
+                n = n + 1
+                print(n)
             except Exception:
                 try:
-                    self.close_popup()
+                    sleep(2.12)
+                    self.like()
                 except Exception:
                     try:
-                        sleep(0.5)
-                        self.close_match()
+                        self.close_popup()
                     except Exception:
-                        sleep(0.5)
-                        self.result_saver()
-                        self.close()
+                        try:
+                            sleep(0.5)
+                            self.close_match()
+                        except Exception:
+                            sleep(0.5)
+                            self.result_saver()
+                            self.close()
 
+run = TinderBot(True)
+run.login(_password=password,_username=username)
+run.auto_swipe()
 
-#run = TinderBot()
-#run.login(_password=password,_username=username)
 #run.auto_swipe()
+

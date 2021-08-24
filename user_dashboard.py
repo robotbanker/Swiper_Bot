@@ -4,7 +4,7 @@ from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-#from Swipe_Bot import TinderBot
+from Swipe_Bot import TinderBot
 
 
 class SwiperBot(App):
@@ -43,7 +43,7 @@ class SwiperBot(App):
         )
         self.window.add_widget(self.pwd)
 
-        self.button = Button (text = "Get me Laid!",
+        self.button = Button (text = "Swipe!",
                               size_hint = (1,0.3),
                               bold = True,
                               background_color = '#00FFCE'
@@ -56,11 +56,11 @@ class SwiperBot(App):
 
 
     def callback(self, instance):
-        pass
-        #tb = TinderBot()
-        #login = tb.login
-        #login (_username=self.user.text, _password=self.pwd.text)
-        #tb.auto_swipe()
+        tb = TinderBot()
+        login = tb.login
+        login (_username=self.user.text, _password=self.pwd.text)
+        tb.auto_swipe()
+        #TODO: insert method that close the kivy window after the loop is over
 
         #add widgets to window
 if __name__ == "__main__":
