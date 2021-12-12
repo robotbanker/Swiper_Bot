@@ -28,13 +28,27 @@ date_time = now.strftime("%m-%d-%Y_%H%M%S")
 class TinderBot:
     def __init__(self,performance):
         if performance == False:
-            self.driver = webdriver.Chrome()
+            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            self.options=webdriver.ChromeOptions()
+            self.options.add_argument(f'user-agent={user_agent}')
+            self.options.add_argument("--window-size=1000,1050")
+            self.options.add_argument('--ignore-certificate-errors')
+            self.options.add_argument('--allow-running-insecure-content')
+            self.options.add_argument("--disable-extensions")
+            self.options.add_argument("--proxy-server='direct://'")
+            self.options.add_argument("--proxy-bypass-list=*")
+            # self.options.add_argument("--start-maximized")
+            self.options.add_argument('--disable-gpu')
+            self.options.add_argument('--disable-dev-shm-usage')
+            self.options.add_argument('--no-sandbox')
+            chrome_path = r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\venv\Scripts\chromedriver'
+            self.driver = webdriver.Chrome(chrome_path, options=self.options)
         else:
             user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
             self.options = webdriver.ChromeOptions()
-            self.options.headless = False #TODO: to fix why this doesn't work when set to True
             self.options.add_argument(f'user-agent={user_agent}')
-            self.options.add_argument("--window-size=1920,1080")
+            self.options.add_argument("--window-size=1000,1050")
+            self.options.headless = True
             self.options.add_argument('--ignore-certificate-errors')
             self.options.add_argument('--allow-running-insecure-content')
             self.options.add_argument("--disable-extensions")
@@ -44,18 +58,21 @@ class TinderBot:
             self.options.add_argument('--disable-gpu')
             self.options.add_argument('--disable-dev-shm-usage')
             self.options.add_argument('--no-sandbox')
-            self.driver = webdriver.Chrome( options=self.options)
+            chrome_path = r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\venv\Scripts\chromedriver'
+            self.driver = webdriver.Chrome(chrome_path, options=self.options)
 
 
     def login(self,_username,_password):
         self.driver.get('https://tinder.com')
         sleep(2)
+        self.driver.save_screenshot(r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Debugging Screenshot\1.gettndrpage.png')
         login_btn = self.driver.find_elements_by_xpath("//*[contains(text(),'Log in')]")
         login_btn[0].click()
         sleep(1)
+        self.driver.save_screenshot(
+            r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Debugging Screenshot\2.clklogin.png')
         fb_btn = self.driver.find_element_by_xpath("//*[contains(text(),'Login with Facebook')]")
         fb_btn.click()
-
         # switch to login popup
         base_window = self.driver.window_handles[0]
         self.driver.switch_to.window(self.driver.window_handles[1])
@@ -65,13 +82,22 @@ class TinderBot:
         # input password
         pw_in = self.driver.find_element_by_xpath('//*[@id="pass"]')
         pw_in.send_keys(_password)
+        self.driver.save_screenshot(
+            r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Debugging Screenshot\3.clkFB.png')
         pw_in.send_keys(Keys.ENTER)
         self.driver.switch_to.window(base_window)
-        sleep(6)
+        self.driver.save_screenshot(
+            r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Debugging Screenshot\4.switchtobase.png')
+        sleep(10)
         # close/accept popup:
-        popup_1 = self.driver.find_elements_by_xpath("//*[contains(text(),'Allow')]")
+        self.driver.save_screenshot(
+            r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Debugging Screenshot\5.popup1.png')
+        print(self.driver.page_source.encode("utf-8"))
+        popup_1 = self.driver.find_elements_by_xpath("//button[@aria-label='Allow']")
         popup_1[0].click()
-        sleep(2)
+        sleep(7)
+        self.driver.save_screenshot(
+            r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\sink\Debugging Screenshot\6.popup2.png')
         popup_2 = self.driver.find_elements_by_xpath("//*[contains(text(),'Not interested')]")
         popup_2[0].click()
         cookies = self.driver.find_elements_by_xpath("//*[contains(text(),'I accept')]")
@@ -167,9 +193,56 @@ class TinderBot:
                             self.result_saver()
                             self.close()
 
-run = TinderBot(True)
+run = TinderBot(False)
 run.login(_password=password,_username=username)
 run.auto_swipe()
 
+class Talker:
+    def __init__(self):
+        chrome_path = r'C:\Users\Davide Solla\PycharmProjects\SwipeBot\venv\Scripts\chromedriver'
+        self.driver = webdriver.Chrome(chrome_path)
+
+    def login(self,_username,_password):
+        self.driver.get('https://tinder.com')
+        sleep(2)
+        login_btn = self.driver.find_elements_by_xpath("//*[contains(text(),'Log in')]")
+        login_btn[0].click()
+        sleep(1)
+        fb_btn = self.driver.find_element_by_xpath("//*[contains(text(),'Login with Facebook')]")
+        fb_btn.click()
+        # switch to login popup
+        base_window = self.driver.window_handles[0]
+        self.driver.switch_to.window(self.driver.window_handles[1])
+        # input email
+        email_in = self.driver.find_element_by_xpath('//*[@id="email"]')
+        email_in.send_keys(_username)
+        # input password
+        pw_in = self.driver.find_element_by_xpath('//*[@id="pass"]')
+        pw_in.send_keys(_password)
+        pw_in.send_keys(Keys.ENTER)
+        self.driver.switch_to.window(base_window)
+        sleep(6)
+        # close/accept popup:
+        popup_1 = self.driver.find_elements_by_xpath("//*[contains(text(),'Allow')]")
+        popup_1[0].click()
+        sleep(2)
+        popup_2 = self.driver.find_elements_by_xpath("//*[contains(text(),'Not interested')]")
+        popup_2[0].click()
+        cookies = self.driver.find_elements_by_xpath("//*[contains(text(),'I accept')]")
+        cookies[0].click()
+        sleep(4)
+
+    def find_message_box(self):
+        while True:
+            anchors = self.driver.find_elements_by_xpath('//a [contains (@class, "matchListItem") and contains (@href, "messages")]')
+            anchors = [a.get_attribute ('href') for a in anchors][0]
+            self.driver.get(anchors)
+            sleep (10)
+
+
+#talker = Talker()
+#talker.login(_username=username,_password=password)
+#talker.find_message_box()
 #run.auto_swipe()
 
+#

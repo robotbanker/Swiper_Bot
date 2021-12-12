@@ -56,7 +56,7 @@ class SwiperBot(App):
 
 
     def callback(self, instance):
-        tb = TinderBot()
+        tb = TinderBot(False)
         login = tb.login
         login (_username=self.user.text, _password=self.pwd.text)
         tb.auto_swipe()
